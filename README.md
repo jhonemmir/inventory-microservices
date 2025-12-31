@@ -195,6 +195,11 @@ La documentación incluye ejemplos de código en múltiples lenguajes (bash, Jav
 
 **Jhon Emmir**
 
+### 🔗 Contacto
+
+- **GitHub**: [jhonemmir](https://github.com/jhonemmir?tab=repositories)
+- **LinkedIn**: [emmir](https://www.linkedin.com/in/emmir)
+
 ---
 
 ⭐ Si te gusta este proyecto, ¡dale una estrella!

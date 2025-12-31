@@ -95,3 +95,7 @@
 2025-12-31 00:28:43,032 [INFO] 📊 Analizando producto ID 1...
 2025-12-31 00:28:43,040 [INFO]    Producto: Camisa Laravel | Stock: 65 | Velocidad: 0.21 u/hora
 2025-12-31 00:28:43,049 [INFO] ✅ BD Actualizada con predicción: Se agota en 13.0 días
+2025-12-31 01:57:24,117 [INFO] 📩 Evento recibido: Venta de producto 1
+2025-12-31 01:57:24,123 [INFO] 📊 Analizando producto ID 1...
+2025-12-31 01:57:24,252 [INFO]    Producto: Camisa Laravel | Stock: 45 | Velocidad: 0.21 u/hora
+2025-12-31 01:57:24,280 [INFO] ✅ BD Actualizada con predicción: Se agota en 9.0 días
