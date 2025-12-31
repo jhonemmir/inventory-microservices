@@ -1,0 +1,117 @@
+name: 'Gestión de Ventas'
+description: |-
+
+  Endpoints para procesar transacciones de ventas y eventos asíncronos.
+
+  Cuando se registra una venta, el sistema:
+  1. Guarda la transacción en MySQL
+  2. Actualiza el stock del producto
+  3. Envía un evento a RabbitMQ para procesamiento asíncrono por el AI Worker
+  4. El AI Worker calcula y actualiza la predicción de agotamiento de stock
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/sales
+    metadata:
+      custom: []
+      groupName: 'Gestión de Ventas'
+      groupDescription: |-
+
+        Endpoints para procesar transacciones de ventas y eventos asíncronos.
+
+        Cuando se registra una venta, el sistema:
+        1. Guarda la transacción en MySQL
+        2. Actualiza el stock del producto
+        3. Envía un evento a RabbitMQ para procesamiento asíncrono por el AI Worker
+        4. El AI Worker calcula y actualiza la predicción de agotamiento de stock
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Registrar Nueva Venta'
+      description: |-
+        Este endpoint recibe una orden de compra, la guarda en MySQL y envía un evento asíncrono
+        a RabbitMQ ('sales_queue') para que el AI Worker procese la predicción de stock.
+
+        El evento en RabbitMQ contiene información sobre la venta y permite al worker de IA
+        recalcular las predicciones de cuándo se agotará el inventario basándose en la velocidad de ventas.
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      product_id:
+        custom: []
+        name: product_id
+        description: 'ID del producto a vender. Debe existir en la base de datos.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      quantity:
+        custom: []
+        name: quantity
+        description: 'Cantidad de unidades a vender. Debe ser mayor a 0.'
+        required: true
+        example: 5
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      product_id: 1
+      quantity: 5
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 201
+        content: |-
+          {
+            "message": "Venta registrada y notificada a la IA",
+            "data": {
+              "id": 15,
+              "product_id": 1,
+              "quantity": 5,
+              "created_at": "2024-01-15T10:30:00.000000Z",
+              "updated_at": "2024-01-15T10:30:00.000000Z"
+            }
+          }
+        headers: []
+        description: 'Venta registrada exitosamente'
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\Product] 999"
+          }
+        headers: []
+        description: 'Producto no encontrado'
+      -
+        custom: []
+        status: 422
+        content: |-
+          {
+            "message": "The given data was invalid.",
+            "errors": {
+              "product_id": ["The product id field is required."],
+              "quantity": ["The quantity must be at least 1."]
+            }
+          }
+        headers: []
+        description: 'Validación fallida'
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null

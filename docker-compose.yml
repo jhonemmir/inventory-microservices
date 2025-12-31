@@ -1,0 +1,67 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: inventory_backend
+    container_name: inventory_backend
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./backend:/var/www
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+      - rabbitmq
+    command: sh -c "composer install && php artisan serve --host=0.0.0.0 --port=8000"
+
+  ai_worker:
+    build:
+      context: ./ai_worker
+      dockerfile: Dockerfile
+    image: inventory_worker
+    container_name: inventory_worker
+    restart: unless-stopped
+    volumes:
+      - ./ai_worker:/app
+    depends_on:
+      - db
+      - rabbitmq
+    command: python main.py
+
+  db:
+    image: mysql:8.0
+    container_name: inventory_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: inventory_db
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: inventory_rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"   
+      - "15672:15672" 
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+  redis:
+    image: redis:alpine
+    container_name: inventory_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+volumes:
+  dbdata:
